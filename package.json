@@ -1,0 +1,14 @@
+{
+  "name": "js-coursera",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dynnoil/js-coursera.git"
+  },
+  "scripts": {
+    "test": "find ./week-*/task*/checks.js | xargs -l node"
+  },
+  "author": "dynnoil@ya.ru",
+  "license": "ISC"
+}
