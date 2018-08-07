@@ -8,12 +8,12 @@ function query(collection) {
     if (arguments.length === 1) {
         return result;
     }
-    var args = [].slice.call(arguments).slice(1);
-    var filterIns = args.filter(function (arg) {
-        return arg.name === 'filterIn';
+    var operations = [].slice.call(arguments, 1);
+    var filterIns = operations.filter(function (operation) {
+        return operation.name === 'filterIn';
     });
-    var selects = args.filter(function (arg) {
-        return arg.name === 'select';
+    var selects = operations.filter(function (operation) {
+        return operation.name === 'select';
     });
     filterIns.forEach(function (filterIn) {
         result = filterIn(result);
@@ -28,24 +28,17 @@ function query(collection) {
  * @params {String[]}
  */
 function select() {
-    var fields = [];
-    if (arguments.length !== 0) {
-        for (var i = 0; i < arguments.length; i++) {
-            fields.push(arguments[i]);
-        }
-    }
+    var properties = [].slice.call(arguments);
     return function select(collection) {
-        var result = [];
-        collection.forEach(function (item) {
+        return collection.map(function (item) {
             var object = {};
-            fields.forEach(function (field) {
-                if (item[field] !== undefined) {
-                    object[field] = item[field];
+            properties.forEach(function (property) {
+                if (item.hasOwnProperty(property)) {
+                    object[property] = item[property];
                 }
             });
-            result.push(object);
+            return object;
         });
-        return result;
     }
 }
 
@@ -55,16 +48,9 @@ function select() {
  */
 function filterIn(property, values) {
     return function filterIn(collection) {
-        var result = [];
-        collection.forEach(function (item) {
-            var contains = values.some(function (value, index, array) {
-                return item[property] === value;
-            });
-            if (contains) {
-                result.push(item);
-            }
+        return collection.filter(function (item) {
+            return values.indexOf(item[property]) > -1;
         });
-        return result;
     }
 }
 
