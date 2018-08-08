@@ -1,3 +1,5 @@
+var subscriptions = {}
+
 module.exports = {
 
     /**
@@ -6,7 +8,14 @@ module.exports = {
      * @param {Function} handler
      */
     on: function (event, subscriber, handler) {
-
+        if (!subscriptions.hasOwnProperty(event)) {
+            subscriptions[event] = [];
+        }
+        subscriptions[event].push({
+            subscriber: subscriber,
+            handler: handler
+        });
+        return this;
     },
 
     /**
@@ -14,13 +23,23 @@ module.exports = {
      * @param {Object} subscriber
      */
     off: function (event, subscriber) {
-
+        if (subscriptions.hasOwnProperty(event)) {
+            subscriptions[event] = subscriptions[event].filter(function (item) {
+                return item.subscriber !== subscriber;
+            })
+        }
+        return this;
     },
 
     /**
      * @param {String} event
      */
     emit: function (event) {
-
+        if (subscriptions.hasOwnProperty(event)) {
+            subscriptions[event].forEach(function (item) {
+                item.handler.call(item.subscriber)
+            })
+        }
+        return this;
     }
 };
