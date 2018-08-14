@@ -7,7 +7,7 @@
     "url": "https://github.com/dynnoil/js-coursera.git"
   },
   "scripts": {
-    "test": "find ./week-*/task*/checks.js | xargs -l node"
+    "test": "find ./part-{1,2}/week-*/task*/checks.js | xargs -l node"
   },
   "author": "dynnoil@ya.ru",
   "license": "ISC"
