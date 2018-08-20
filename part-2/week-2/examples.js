@@ -87,7 +87,7 @@ function Animal(name) {
 function Cat(name) {
     Animal.call(this, name);
 }
-Cat.prototype = Object.create(Person.prototype);
+Cat.prototype = Object.create(Animal.prototype);
 Cat.prototype.constructor = Cat;
 assert.equal(new Cat('fluffy').name, 'fluffy');
 

@@ -7,21 +7,30 @@ module.exports = Collection;
  * @constructor
  */
 function Collection() {
-    this.items = [];
+    this._items = [];
+}
+
+/**
+ * Провалидировать позицию элемента в коллекции
+ * 
+ * @param {number} index - позиция элемента в коллекции
+ */
+Collection.prototype._validPosition = function (index) {
+    return index > 0 && index <= this.count();
 }
 
 /**
  * Возвращает массив элементов коллекции
  */
 Collection.prototype.values = function () {
-    return this.items;
+    return this._items;
 };
 
 /**
  * Подсчитывает кол-во элементов в коллекции
  */
 Collection.prototype.count = function () {
-    return this.items.length;
+    return this._items.length;
 }
 
 /**
@@ -32,7 +41,7 @@ Collection.prototype.count = function () {
  * @param {Number} index 
  */
 Collection.prototype.at = function (index) {
-    return this.items[index - 1] ? this.items[index - 1] : null;
+    return this._validPosition(index) ? this._items[index - 1] : null;
 }
 
 /**
@@ -42,9 +51,9 @@ Collection.prototype.at = function (index) {
  */
 Collection.prototype.append = function (value) {
     if (value instanceof Collection) {
-        this.items = this.items.concat(value.values());
+        this._items = this._items.concat(value.values());
     } else {
-        this.items.push(value);
+        this._items.push(value);
     }
 }
 
@@ -56,15 +65,11 @@ Collection.prototype.append = function (value) {
  * 
  * @param {*} itemIndex 
  */
-Collection.prototype.removeAt = function (itemIndex) {
-    var resultIndex = itemIndex - 1;
-    if (resultIndex < 0 || resultIndex > this.items.length) {
-        return false;
+Collection.prototype.removeAt = function (index) {
+    if (this._validPosition(index)) {
+        return !!this._items.splice(index - 1, 1);
     }
-    this.items = this.items.filter(function (value, index) {
-        return index !== resultIndex;
-    }, this);
-    return true;
+    return false;
 }
 
 /**
@@ -72,7 +77,7 @@ Collection.prototype.removeAt = function (itemIndex) {
  */
 Collection.from = function (values) {
     return Object.create(Collection.prototype, {
-        items: {
+        _items: {
             value: values
         }
     });
