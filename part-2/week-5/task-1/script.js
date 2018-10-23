@@ -30,9 +30,11 @@ function validateForm(parameters) {
      */
     var isValidNumber = function (value, min, max) {
         if (!value) return true;
-        var minValue = Number(min) || Number.MIN_VALUE;
-        var maxValue = Number(max) || Number.MAX_VALUE;
-        return /^\d+$/.test(value) && (Number(value) >= minValue && Number(value) <= maxValue);
+        var intValue = parseInt(value);
+        if (isNaN(intValue)) return false;
+        if (min && parseInt(min) > value) return false;
+        if (max && parseInt(max) < value) return false;
+        return true;
     }
 
     /**
